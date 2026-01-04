@@ -45,4 +45,32 @@ jobs:
           echo ""
           terraform output -json | jq -r 'to_entries[] | "  \(.key): \(.value.value)"'
           echo ""
-          echo "::notice title=Deployment Complete::IAM roles deployed successfully"
+
+      - name: Generate GitHub App token
+        id: generate-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          owner: stackgobrr
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: uv sync --all-groups
+
+      - name: Update repository variables
+        run: uv run python scripts/update_repo_variables.py
+        env:
+          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
+
+      - name: Deployment complete
+        run: echo "::notice title=Deployment Complete::IAM roles deployed and variables updated successfully"
