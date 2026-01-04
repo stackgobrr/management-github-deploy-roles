@@ -14,7 +14,9 @@ repos:
     rev: v1.96.2
     hooks:
       - id: terraform_fmt
+        exclude: ^templates/
       - id: terraform_validate
+        exclude: ^templates/
         args:
           - --hook-config=--retry-once-with-cleanup=true
 
