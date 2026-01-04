@@ -52,13 +52,13 @@ jobs:
           terraform_wrapper: false
 
       - name: Terraform fmt
-        run: terraform fmt -check -recursive
+        run: terraform fmt -check -recursive infra/
 
       - name: Terraform init
-        run: terraform init -backend=false
+        run: terraform -chdir=infra init -backend=false
 
       - name: Terraform validate
-        run: terraform validate
+        run: terraform -chdir=infra validate
 
   python:
     name: Python validation
