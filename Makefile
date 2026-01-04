@@ -1,31 +1,35 @@
-.PHONY: help new-spa install-deps sync setup-hooks
+.PHONY: help new-spa sync setup-hooks update-variables
 
 help:
 	@echo "Available targets:"
 	@echo "  make new spa <project-name>  - Create a new single-page application deploy role"
 	@echo "  make sync                    - Regenerate all roles from templates"
+	@echo "  make update-variables        - Update repository variables with deployed role ARNs"
 	@echo "  make install-deps            - Install dependencies with uv"
 	@echo "  make setup-hooks             - Install pre-commit hooks"
 	@echo ""
 	@echo "Examples:"
 	@echo "  make new spa my-app"
 	@echo "  make sync"
+	@echo "  make update-variables"
 
 install-deps:
 	@which uv > /dev/null || (echo "Error: uv not found. Install with: curl -LsSf https://astral.sh/uv/install.sh | sh" && exit 1)
 	@uv sync --all-groups && echo "Dependencies installed"
 
-setup-hooks:
-	@which uv > /dev/null || (echo "Error: uv not found. Run 'make install-deps' first." && exit 1)
+setup-hooks: install-deps
 	@uv run pre-commit install && echo "Pre-commit hooks installed"
 
-sync:
-	@which uv > /dev/null || (echo "Error: uv not found. Run 'make install-deps' first." && exit 1)
+sync: install-deps
 	@uv run python scripts/sync_roles.py
 
-new:
-	@which uv > /dev/null || (echo "Error: uv not found. Run 'make install-deps' first." && exit 1); \
-	TEMPLATE_TYPE=$(word 2,$(MAKECMDGOALS)); \
+update-variables: install-deps
+	@which gh > /dev/null || (echo "Error: gh CLI not found. Install from: https://cli.github.com/" && exit 1)
+	@echo "Updating repository variables with deployed role ARNs..."
+	@uv run python scripts/update_repo_variables.py
+
+new: install-deps
+	@TEMPLATE_TYPE=$(word 2,$(MAKECMDGOALS)); \
 	PROJECT_NAME=$(word 3,$(MAKECMDGOALS)); \
 	if [ "$$TEMPLATE_TYPE" = "spa" ]; then \
 		if [ -z "$$PROJECT_NAME" ]; then \

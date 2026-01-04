@@ -11,6 +11,7 @@ Set GH_APP_ID and GH_APP_PRIVATE_KEY as secrets in the workflow repository.
 """
 
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -19,7 +20,25 @@ import yaml
 
 
 def get_terraform_outputs():
-    """Get Terraform outputs from infra directory."""
+    """Get Terraform outputs from environment variable or by running terraform.
+
+    In CI/CD (when CI=true), reads outputs from TERRAFORM_OUTPUTS env var.
+    Locally, runs terraform output command.
+    """
+    # In CI, use pre-computed outputs from environment
+    if os.environ.get("CI") == "true":
+        terraform_outputs = os.environ.get("TERRAFORM_OUTPUTS")
+        if not terraform_outputs:
+            print("Error: CI=true but TERRAFORM_OUTPUTS not set")
+            sys.exit(1)
+        try:
+            return json.loads(terraform_outputs)
+        except json.JSONDecodeError as e:
+            print(f"Error parsing TERRAFORM_OUTPUTS: {e}")
+            sys.exit(1)
+
+    # Locally, run terraform output
+    print("Running terraform output locally...")
     try:
         result = subprocess.run(
             ["terraform", "output", "-json"],

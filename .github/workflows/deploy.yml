@@ -39,12 +39,16 @@ jobs:
           TF_VAR_github_org: "stackgobrr"
 
       - name: Output role ARNs
+        id: terraform-outputs
         run: |
           cd infra
           echo "Deployed IAM Role ARNs:"
           echo ""
           terraform output -json | jq -r 'to_entries[] | "  \(.key): \(.value.value)"'
           echo ""
+
+          # Save outputs for next step
+          echo "outputs=$(terraform output -json)" >> $GITHUB_OUTPUT
 
       - name: Generate GitHub App token
         id: generate-token
@@ -70,10 +74,9 @@ jobs:
       - name: Update repository variables
         run: uv run python scripts/update_repo_variables.py
         env:
+          CI: "true"
           GH_TOKEN: ${{ steps.generate-token.outputs.token }}
-          AWS_REGION: ${{ env.AWS_REGION }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          TERRAFORM_OUTPUTS: ${{ steps.terraform-outputs.outputs.outputs }}
 
       - name: Deployment complete
         run: echo "::notice title=Deployment Complete::IAM roles deployed and variables updated successfully"
