@@ -36,14 +36,14 @@ new:
 		echo "Generating SPA deploy role for project: $$PROJECT_NAME"; \
 		uv run cookiecutter templates/spa --no-input project_name=$$PROJECT_NAME --output-dir /tmp/cookiecutter-output; \
 		SLUG=$$(echo "$$PROJECT_NAME" | tr '[:upper:]' '[:lower:]' | tr '_' '-' | tr ' ' '-'); \
-		mv /tmp/cookiecutter-output/$$SLUG/role.tf roles/$$SLUG.tf; \
-		mv /tmp/cookiecutter-output/$$SLUG/policy.json policies/$$SLUG-policy.json; \
+		mv /tmp/cookiecutter-output/$$SLUG/role.tf infra/role-$$SLUG.tf; \
+		mv /tmp/cookiecutter-output/$$SLUG/policy.json infra/policies/$$SLUG-policy.json; \
 		rm -rf /tmp/cookiecutter-output; \
 		uv run python scripts/add_role.py $$PROJECT_NAME spa; \
 		echo ""; \
 		echo "Created files:"; \
-		echo "  - roles/$$SLUG.tf"; \
-		echo "  - policies/$$SLUG-policy.json"; \
+		echo "  - infra/role-$$SLUG.tf"; \
+		echo "  - infra/policies/$$SLUG-policy.json"; \
 		echo "  - Updated roles.yaml"; \
 		echo ""; \
 		echo "Next steps:"; \

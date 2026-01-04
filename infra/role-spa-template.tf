@@ -9,7 +9,7 @@ module "spa_template" {
 
   policy_name        = "SpaTemplateDeploymentPolicy"
   policy_description = "Policy for spa-template frontend deployment (S3 + CloudFront)"
-  policy_json        = file("${path.module}/../policies/spa-template-policy.json")
+  policy_json        = file("${path.module}/policies/spa-template-policy.json")
 
   github_org  = var.github_org
   github_repo = "common-template-single-page-app"
