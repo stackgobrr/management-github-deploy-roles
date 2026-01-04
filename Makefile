@@ -39,10 +39,12 @@ new:
 		mv /tmp/cookiecutter-output/$$SLUG/role.tf roles/$$SLUG.tf; \
 		mv /tmp/cookiecutter-output/$$SLUG/policy.json policies/$$SLUG-policy.json; \
 		rm -rf /tmp/cookiecutter-output; \
+		uv run python scripts/add_role.py $$PROJECT_NAME spa; \
 		echo ""; \
 		echo "Created files:"; \
 		echo "  - roles/$$SLUG.tf"; \
 		echo "  - policies/$$SLUG-policy.json"; \
+		echo "  - Updated roles.yaml"; \
 		echo ""; \
 		echo "Next steps:"; \
 		echo "  1. Review the generated files"; \
