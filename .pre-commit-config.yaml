@@ -15,7 +15,8 @@ repos:
     hooks:
       - id: terraform_fmt
       - id: terraform_validate
-      - id: terraform_tflint
+        args:
+          - --hook-config=--retry-once-with-cleanup=true
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.9.2
