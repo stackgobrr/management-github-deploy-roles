@@ -1,0 +1,10 @@
+{
+  "project_name": "my-project",
+  "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '-').replace('_', '-') }}",
+  "project_name_pascal": "{{ cookiecutter.project_slug.replace('-', ' ').title().replace(' ', '') }}",
+  "project_name_underscore": "{{ cookiecutter.project_slug.replace('-', '_') }}",
+  "github_repo": "{{ cookiecutter.project_slug }}",
+  "environment": "prod",
+  "github_org": "stackgobrr",
+  "bucket_prefix": "{{ cookiecutter.project_slug }}"
+}
