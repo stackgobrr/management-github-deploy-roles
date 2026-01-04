@@ -25,7 +25,7 @@ def regenerate_role(project_name, template_type):
     """Regenerate a role from its template."""
     print(f"Regenerating {project_name} from {template_type} template...")
 
-    slug = project_name.lower().replace('_', '-').replace(' ', '-')
+    slug = project_name.lower().replace("_", "-").replace(" ", "-")
 
     # Run cookiecutter
     cmd = [
@@ -35,7 +35,7 @@ def regenerate_role(project_name, template_type):
         f"project_name={project_name}",
         "--output-dir",
         "/tmp/cookiecutter-output",
-        "--overwrite-if-exists"
+        "--overwrite-if-exists",
     ]
 
     result = subprocess.run(cmd, capture_output=True, text=True)
@@ -46,13 +46,10 @@ def regenerate_role(project_name, template_type):
 
     # Move generated files
     try:
-        os.rename(
-            f"/tmp/cookiecutter-output/{slug}/role.tf",
-            f"roles/{slug}.tf"
-        )
+        os.rename(f"/tmp/cookiecutter-output/{slug}/role.tf", f"roles/{slug}.tf")
         os.rename(
             f"/tmp/cookiecutter-output/{slug}/policy.json",
-            f"policies/{slug}-policy.json"
+            f"policies/{slug}-policy.json",
         )
         subprocess.run(["rm", "-rf", f"/tmp/cookiecutter-output/{slug}"], check=True)
         print(f"  Updated roles/{slug}.tf")
