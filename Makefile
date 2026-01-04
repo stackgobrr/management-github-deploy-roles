@@ -1,25 +1,25 @@
-.PHONY: help new-spa install-deps
+.PHONY: help new-spa install-deps sync
 
 help:
 	@echo "Available targets:"
 	@echo "  make new spa <project-name>  - Create a new single-page application deploy role"
-	@echo "  make install-deps            - Install cookiecutter if not present"
+	@echo "  make sync                    - Regenerate all roles from templates"
+	@echo "  make install-deps            - Install dependencies with uv"
 	@echo ""
-	@echo "Example:"
+	@echo "Examples:"
 	@echo "  make new spa my-app"
+	@echo "  make sync"
 
 install-deps:
-	@if [ ! -d .venv ]; then \
-		echo "Creating virtual environment..."; \
-		python3 -m venv .venv; \
-	fi
-	@.venv/bin/pip install cookiecutter > /dev/null 2>&1 && echo "Dependencies installed"
+	@which uv > /dev/null || (echo "Error: uv not found. Install with: curl -LsSf https://astral.sh/uv/install.sh | sh" && exit 1)
+	@uv sync && echo "Dependencies installed"
+
+sync:
+	@which uv > /dev/null || (echo "Error: uv not found. Run 'make install-deps' first." && exit 1)
+	@uv run python scripts/sync_roles.py
 
 new:
-	@if [ ! -f .venv/bin/cookiecutter ]; then \
-		echo "Error: cookiecutter not found. Run 'make install-deps' first."; \
-		exit 1; \
-	fi; \
+	@which uv > /dev/null || (echo "Error: uv not found. Run 'make install-deps' first." && exit 1); \
 	TEMPLATE_TYPE=$(word 2,$(MAKECMDGOALS)); \
 	PROJECT_NAME=$(word 3,$(MAKECMDGOALS)); \
 	if [ "$$TEMPLATE_TYPE" = "spa" ]; then \
@@ -29,7 +29,7 @@ new:
 			exit 1; \
 		fi; \
 		echo "Generating SPA deploy role for project: $$PROJECT_NAME"; \
-		.venv/bin/cookiecutter templates/spa --no-input project_name=$$PROJECT_NAME --output-dir /tmp/cookiecutter-output; \
+		uv run cookiecutter templates/spa --no-input project_name=$$PROJECT_NAME --output-dir /tmp/cookiecutter-output; \
 		SLUG=$$(echo "$$PROJECT_NAME" | tr '[:upper:]' '[:lower:]' | tr '_' '-' | tr ' ' '-'); \
 		mv /tmp/cookiecutter-output/$$SLUG/role.tf roles/$$SLUG.tf; \
 		mv /tmp/cookiecutter-output/$$SLUG/policy.json policies/$$SLUG-policy.json; \
