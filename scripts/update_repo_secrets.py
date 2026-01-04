@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
-"""Update GitHub repository secrets with deployed IAM role ARNs."""
+"""Update GitHub repository secrets with deployed IAM role ARNs.
+
+Requires a GitHub App with the following permissions:
+- Repository permissions:
+  - Secrets: Read and write
+  - Contents: Read-only
+
+The GitHub App should be installed on all repositories that need role ARNs.
+Set GH_APP_ID and GH_APP_PRIVATE_KEY as secrets in the workflow repository.
+"""
 
 import json
 import subprocess
