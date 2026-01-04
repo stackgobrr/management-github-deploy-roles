@@ -18,3 +18,8 @@ module "spa_template" {
     Project = "spa-template"
   }
 }
+
+output "spa_template_role_arn" {
+  description = "ARN of the spa-template IAM role"
+  value       = module.spa_template.role_arn
+}

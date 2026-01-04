@@ -18,3 +18,8 @@ module "home" {
     Project = "home"
   }
 }
+
+output "home_role_arn" {
+  description = "ARN of the home IAM role"
+  value       = module.home.role_arn
+}

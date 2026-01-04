@@ -18,3 +18,8 @@ module "{{ cookiecutter.project_name_underscore }}" {
     Project = "{{ cookiecutter.project_slug }}"
   }
 }
+
+output "{{ cookiecutter.project_slug }}_role_arn" {
+  description = "ARN of the {{ cookiecutter.project_slug }} IAM role"
+  value       = module.{{ cookiecutter.project_name_underscore }}.role_arn
+}
