@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Update GitHub repository secrets with deployed IAM role ARNs.
+"""Update GitHub repository variables with deployed IAM role ARNs.
 
 Requires a GitHub App with the following permissions:
 - Repository permissions:
-  - Secrets: Read and write
+  - Variables: Read and write
   - Contents: Read-only
 
 The GitHub App should be installed on all repositories that need role ARNs.
@@ -59,20 +59,20 @@ def get_repo_name(project_name):
     return repo_mappings.get(project_name, project_name)
 
 
-def set_github_secret(org, repo, secret_name, secret_value):
-    """Set a GitHub repository secret using gh CLI."""
+def set_github_variable(org, repo, variable_name, variable_value):
+    """Set a GitHub repository variable using gh CLI."""
     try:
-        # Use gh secret set command
+        # Use gh variable set command
         subprocess.run(
-            ["gh", "secret", "set", secret_name, "--repo", f"{org}/{repo}"],
-            input=secret_value,
+            ["gh", "variable", "set", variable_name, "--repo", f"{org}/{repo}"],
+            input=variable_value,
             text=True,
             capture_output=True,
             check=True,
         )
         return True
     except subprocess.CalledProcessError as e:
-        print(f"Error setting secret for {org}/{repo}: {e.stderr}")
+        print(f"Error setting variable for {org}/{repo}: {e.stderr}")
         return False
 
 
@@ -88,7 +88,7 @@ def main():
         print("No roles found in roles.yaml")
         return
 
-    print(f"\nUpdating secrets for {len(roles)} repository(ies)...\n")
+    print(f"\nUpdating variables for {len(roles)} repository(ies)...\n")
 
     success_count = 0
     failed_count = 0
@@ -120,11 +120,11 @@ def main():
         print(f"Setting AWS_ROLE_ARN for {github_org}/{repo_name}...")
         print(f"  ARN: {role_arn}")
 
-        if set_github_secret(github_org, repo_name, "AWS_ROLE_ARN", role_arn):
-            print("  ✓ Secret updated successfully")
+        if set_github_variable(github_org, repo_name, "AWS_ROLE_ARN", role_arn):
+            print("  ✓ Variable updated successfully")
             success_count += 1
         else:
-            print("  ✗ Failed to update secret")
+            print("  ✗ Failed to update variable")
             failed_count += 1
 
         print()

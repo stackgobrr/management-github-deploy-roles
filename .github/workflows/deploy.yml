@@ -67,10 +67,10 @@ jobs:
       - name: Install dependencies
         run: uv sync --all-groups
 
-      - name: Update repository secrets
-        run: uv run python scripts/update_repo_secrets.py
+      - name: Update repository variables
+        run: uv run python scripts/update_repo_variables.py
         env:
           GH_TOKEN: ${{ steps.generate-token.outputs.token }}
 
       - name: Deployment complete
-        run: echo "::notice title=Deployment Complete::IAM roles deployed and secrets updated successfully"
+        run: echo "::notice title=Deployment Complete::IAM roles deployed and variables updated successfully"
