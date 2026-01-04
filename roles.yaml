@@ -1,5 +1,7 @@
 roles:
-  - project_name: wm-dojo
-    template: spa
-  - project_name: spa-template
-    template: spa
+- project_name: wm-dojo
+  template: spa
+- project_name: spa-template
+  template: spa
+- project_name: home
+  template: spa
