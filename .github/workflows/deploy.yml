@@ -47,8 +47,8 @@ jobs:
           terraform output -json | jq -r 'to_entries[] | "  \(.key): \(.value.value)"'
           echo ""
 
-          # Save outputs for next step
-          echo "outputs=$(terraform output -json)" >> $GITHUB_OUTPUT
+          # Save outputs to file for next step
+          terraform output -json > ../terraform-outputs.json
 
       - name: Generate GitHub App token
         id: generate-token
@@ -72,11 +72,12 @@ jobs:
         run: uv sync --all-groups
 
       - name: Update repository variables
-        run: uv run python scripts/update_repo_variables.py
+        run: |
+          export TERRAFORM_OUTPUTS=$(cat terraform-outputs.json)
+          uv run python scripts/update_repo_variables.py
         env:
           CI: "true"
           GH_TOKEN: ${{ steps.generate-token.outputs.token }}
-          TERRAFORM_OUTPUTS: ${{ steps.terraform-outputs.outputs.outputs }}
 
       - name: Deployment complete
         run: echo "::notice title=Deployment Complete::IAM roles deployed and variables updated successfully"
