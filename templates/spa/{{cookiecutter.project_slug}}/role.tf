@@ -9,7 +9,7 @@ module "{{ cookiecutter.project_name_underscore }}" {
 
   policy_name        = "{{ cookiecutter.project_name_pascal }}DeploymentPolicy"
   policy_description = "Policy for {{ cookiecutter.project_slug }} frontend deployment (S3 + CloudFront)"
-  policy_json        = file("${path.module}/../policies/{{ cookiecutter.project_slug }}-policy.json")
+  policy_json        = file("${path.module}/policies/{{ cookiecutter.project_slug }}-policy.json")
 
   github_org  = var.github_org
   github_repo = "{{ cookiecutter.github_repo }}"

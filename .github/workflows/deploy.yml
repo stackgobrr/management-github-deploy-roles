@@ -26,7 +26,7 @@ jobs:
         uses: stackgobrr/common-github-actions/actions/terraform-deploy@main
         with:
           terraform-version: "1.14.1"
-          working-directory: "."
+          working-directory: "infra"
           terraform-wrapper: false
           auto-approve: true
           format-check: true
@@ -37,3 +37,12 @@ jobs:
           TF_VAR_aws_account_id: "575108940418"
           TF_VAR_aws_region: ${{ env.AWS_REGION }}
           TF_VAR_github_org: "stackgobrr"
+
+      - name: Output role ARNs
+        run: |
+          cd infra
+          echo "Deployed IAM Role ARNs:"
+          echo ""
+          terraform output -json | jq -r 'to_entries[] | "  \(.key): \(.value.value)"'
+          echo ""
+          echo "::notice title=Deployment Complete::IAM roles deployed successfully"
