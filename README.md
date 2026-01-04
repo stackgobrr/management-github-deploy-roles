@@ -39,16 +39,16 @@ After generation, review the files and commit them to deploy the IAM role.
 
 ## Prerequisites
 
-Install cookiecutter if not already installed:
+Install dependencies:
 
 ```bash
 make install-deps
 ```
 
-Or manually:
+Set up pre-commit hooks:
 
 ```bash
-pip install cookiecutter
+make setup-hooks
 ```
 
 ## Existing Roles

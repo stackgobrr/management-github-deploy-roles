@@ -1,10 +1,11 @@
-.PHONY: help new-spa install-deps sync
+.PHONY: help new-spa install-deps sync setup-hooks
 
 help:
 	@echo "Available targets:"
 	@echo "  make new spa <project-name>  - Create a new single-page application deploy role"
 	@echo "  make sync                    - Regenerate all roles from templates"
 	@echo "  make install-deps            - Install dependencies with uv"
+	@echo "  make setup-hooks             - Install pre-commit hooks"
 	@echo ""
 	@echo "Examples:"
 	@echo "  make new spa my-app"
@@ -12,7 +13,11 @@ help:
 
 install-deps:
 	@which uv > /dev/null || (echo "Error: uv not found. Install with: curl -LsSf https://astral.sh/uv/install.sh | sh" && exit 1)
-	@uv sync && echo "Dependencies installed"
+	@uv sync --all-groups && echo "Dependencies installed"
+
+setup-hooks:
+	@which uv > /dev/null || (echo "Error: uv not found. Run 'make install-deps' first." && exit 1)
+	@uv run pre-commit install && echo "Pre-commit hooks installed"
 
 sync:
 	@which uv > /dev/null || (echo "Error: uv not found. Run 'make install-deps' first." && exit 1)
