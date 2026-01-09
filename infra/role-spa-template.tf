@@ -12,14 +12,14 @@ module "spa_template" {
   policy_json        = file("${path.module}/policies/spa-template-policy.json")
 
   github_org  = var.github_org
-  github_repo = "common-template-single-page-app"
+  github_repo = "spa-template"
 
   tags = {
     Project = "spa-template"
   }
 }
 
-output "spa_template_role_arn" {
+output "spa-template_role_arn" {
   description = "ARN of the spa-template IAM role"
   value       = module.spa_template.role_arn
 }

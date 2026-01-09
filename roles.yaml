@@ -5,3 +5,5 @@ roles:
   template: spa
 - project_name: home
   template: spa
+- project_name: emojiroglyphics
+  template: spa
