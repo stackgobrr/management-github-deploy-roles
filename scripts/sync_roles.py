@@ -46,14 +46,14 @@ def regenerate_role(project_name, template_type):
 
     # Move generated files
     try:
-        os.rename(f"/tmp/cookiecutter-output/{slug}/role.tf", f"roles/{slug}.tf")
+        os.rename(f"/tmp/cookiecutter-output/{slug}/role.tf", f"infra/role-{slug}.tf")
         os.rename(
             f"/tmp/cookiecutter-output/{slug}/policy.json",
-            f"policies/{slug}-policy.json",
+            f"infra/policies/{slug}-policy.json",
         )
         subprocess.run(["rm", "-rf", f"/tmp/cookiecutter-output/{slug}"], check=True)
-        print(f"  Updated roles/{slug}.tf")
-        print(f"  Updated policies/{slug}-policy.json")
+        print(f"  Updated infra/role-{slug}.tf")
+        print(f"  Updated infra/policies/{slug}-policy.json")
         return True
     except Exception as e:
         print(f"Error: Failed to move files for {project_name}: {e}")

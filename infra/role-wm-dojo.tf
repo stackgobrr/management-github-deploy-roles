@@ -19,7 +19,7 @@ module "wm_dojo" {
   }
 }
 
-output "wm_dojo_role_arn" {
+output "wm-dojo_role_arn" {
   description = "ARN of the wm-dojo IAM role"
   value       = module.wm_dojo.role_arn
 }
