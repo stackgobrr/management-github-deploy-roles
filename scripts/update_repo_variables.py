@@ -123,8 +123,8 @@ def main():
             continue
 
         # Convert project name to output key format
-        # e.g., "wm-dojo" -> "wm_dojo_role_arn"
-        output_key = f"{project_name.replace('-', '_')}_role_arn"
+        # e.g., "wm-dojo" -> "wm-dojo_role_arn"
+        output_key = f"{project_name}_role_arn"
 
         if output_key not in outputs:
             print(
