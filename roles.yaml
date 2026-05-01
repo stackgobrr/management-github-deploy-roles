@@ -7,3 +7,5 @@ roles:
   template: spa
 - project_name: emojiroglyphics
   template: spa
+- project_name: duty-clock
+  template: spa
